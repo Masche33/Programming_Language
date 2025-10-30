@@ -420,12 +420,12 @@ Ci sono tre fondamenti da tenere a mente.
 
 \vspace*{0.5cm}
 
-\hspace*{0.5cm}\textbf{filter}: Una funzione che dato un predicato\footnote{Funzione che da in input} e una lista restituisce la lista composta da ogni elemento della lista in input che pongono a true il predicato.
-La firma è: ('a -> bool) -> 'a list -> 'a list.\newline
+\hspace*{0.5cm}\textbf{filter}: Una funzione che dato un predicato\footnote{Funzione che prende n parametri in input e restituisce un bool} e una lista restituisce la lista composta da ogni elemento della lista in input che pongono a true il predicato.
+La firma è: \texttt{\>('a -> bool) -> 'a list -> 'a list}.\newline
 \hspace*{0.5cm}\textbf{map}: Data una funzione 'f' e una lista di elementi restituisce la lista dove ogni elemento è il risultato della funzione applicata all'elemento della lista passata in input.
-La firma è: ('a -> 'b) -> 'a list -> 'b list.\newline
+La firma è: \texttt{\>('a -> 'b) -> 'a list -> 'b list}.\newline
 \hspace*{0.5cm}\textbf{Reduce}: Data una funzione accumulatrice e una lista restituisce il risultato dell'accumulazione della funzione su  ogni elemento.
-La firma è: ('a -> 'b -> 'b) -> 'a list -> 'b.\newline
+La firma è: \texttt{\>('a -> 'b -> 'b) -> 'a list -> 'b}.\newline
 \hspace*{0.5cm}Per fare questo Ocaml usa \texttt{fold\_right} e \texttt{fold\_left} che data una lista inizia ad accumulare o da destra e da sinistra.
 
 \subsubsection{Funtori di Funtori}
@@ -481,7 +481,7 @@ module M0 = VarArgs.VarArgs(ListConcatFunctor.
 module M1 = VarArgs.VarArgs(ListConcatFunctor.
                             ListConcatFunctor(struct type t = string end));;
 module M2 = VarArgs.VarArgs(ListConcatFunctor.
-                            ListConcatFunctor(struct type t = (int * char) end));;
+                            ListConcatFunctor(struct type t = (int*char) end));;
 \end{minted}
 
 \end{minipage}
