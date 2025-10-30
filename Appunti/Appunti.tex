@@ -1,0 +1,492 @@
+\documentclass{article}
+
+\usepackage[margin=2cm, a4paper]{geometry}
+\usepackage[italian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usetikzlibrary{shapes.multipart}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{minted}
+\usepackage{caption}
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable}
+
+\title{Linguaggi di programmazione}
+\author{Mascherpa Matteo}
+\date{a.a. 2025-2026}
+
+\setlength{\parindent}{0pt} % disabilita indentazione automatica
+
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+\section{Programmazione funzionale}
+
+\subsection{Introduzione}
+
+\hspace*{0.5cm} La \textit{programmazione funzionale} è un paradigma di programmazione in cui le funzioni sono membri di prima classe \footnote{Con ciò si intende che le funzioni possono essere passate come argomenti ad altre funzioni e possono essere memorizzate come valori}.
+La struttura di controllo prevalente diventa la ricorsione al posto dei cicli di controllo di flussi.
+La ricorsione viene utilizzata, come nel campo matematico, per definire funzioni che arrivino ad un caso base.
+Nella programmazione funzionale "pura" vengono eliminati gli effetti collaterali della funzione sui parametri.
+Si esclude quindi l'assegnamento per tenere traccia dello stato del programma e si scoraraggia l'uso si "statement" favorendo la "expression evaluation".
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm} Le caratteristiche sovraccitate rendono il codice più rapido da sviluppare e lo allegeriscono da bachi.
+Rendendo ogni funzione un nucleo a sé si evita un comportamento diverso in base allo stato del programma avendo quindi sempre uno stesso output $\alpha'$ per un input $\alpha$.
+La stessa unitarietà delle funzioni rende più semplice la prova formale di correttezza.
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}L'idea di base è di modellare tutto nel codice come \textit{funzioni matematiche} nella forma $f(x) = y$ \footnote{Alternativamente $f(x) \to y$}. I costrutti sono solo due: \textit{astrazione} e \textit{applicazione}. 
+Dove l'\textit{astrazione} è la definizione della funzione e l'\textit{applicazione} è la chiamata che la adopera.
+
+\hspace*{0.5cm}Avendo questa forma il codice non viene tenuto conto di uno stato mutevole, al posto di parametri che tengano conto dello stato le variabili non sono altro che etichette usate per richiamare le funzioni precedentemente specificate.
+
+\subsection{Lambda calcolo} 
+
+\hspace*{0.5cm} Il $\lambda$-calcolo è un modello formale per descivere procedimenti formali di una funzione matematica\footnote{Treccani, 10/2025}
+
+\hspace*{0.5cm}Il lambda-calcolo\footnote{$\lambda$-calcolo} è composto da \textit{costanti}, \textit{variabili}, \textit{$\lambda$} e \textit{parentesi}. 
+Un'espressione di $\lambda$-calcolo può essere in una delle seguenti forme. 
+\begin{enumerate}[itemsep=0mm]
+  \item Se $x$ è una \textit{variabile} o una \textit{costante} allora $x$ è una $\lambda$-expression.
+  \item Se $x$ è una variabile e $M$ è una $\lambda$-expression allora $\lambda x.M$ è una $\lambda$-expression.
+  \item Se $M,N$ sono $\lambda$-expression allora $(MN)$ è una $\lambda$-expression.
+\end{enumerate}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm} Essendo il $\lambda$-calcolo il predecessore della programmazione funzionale si possono intravedere in esso i meccanismi dell'astrazione e applicazione come spiegato prima.
+\begin{itemize}
+  \item L'astrazione si trova nell'espressione di $\lambda$-calcolo non ha nessuna variabile che ha valore ad un valore: $\lambda x.x + 1$. 
+  \item L'applicazione è un'espressione di $\lambda$-calcolo hanno le variabili a cui si applicano dei valori : $(\lambda x.x + 1)7$.
+\end{itemize}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Le variabili possono essere libere o legate.
+Una variabile è legata se appare come input in una $\lambda$-expression.
+
+\subsection{OCaMl}
+
+\hspace*{0.5cm} OCaMl è un dialetto di ML, che deriva dal $\lambda$-calcolo, con però altri nuove caratteristiche.
+Quindi in questi appunti se una caratteristica è comune a tutti i dialetti di ML si userà ML e OCaMl quando è una caratteristica aggiunta o specifica di OCaml.
+
+\vspace*{0.5cm}
+
+
+\begin{itemize}
+  \item ML è un \textbf{linguaggio funzionale}, cioè le funzioni sono valori di \textit{prima classe}.
+    Con ciò si intende che le funzioni possono essere passate come argomenti ad altre funzioni e possono essere memorizzate come valori.
+    Vengono trattate come le funzioni matematiche.
+    L'assegnamento che cambiano un valore permanentemente sono permessi ma rari.
+
+  \item ML è \textbf{fortemente tipato}, cioè il tipo di ogni espressione viene definita a \textit{compile-time}. Questo garantisce che il programma non avrà errori di tipo a run time.
+
+  \item ML usa l'inferenza di tipi per definire il tipo di un'espressione da come viene utilizzata.
+
+  \item ML ha un sistema di tipi polimorfici, cioé che si possono scrivere codici che valgono per ogni tipo.
+
+  \item ML implementa \textbf{pattern matching}, un meccanismo che unifica la verifica dei casi e decostruzione dei dati.
+
+  \item ML implementa un \textbf{sistema di moduli} in modo che un tipo possa essere definito astrattamente e definito. 
+    A supporto di questo sistema vengono i funtori.   
+\end{itemize}
+
+\hspace*{0.5cm}OCaMl ha un interprete\footnote{ocaml} e un compilatore \footnote{ocamlc}.
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Se $C$ che è debolmente tipato, cioé un tipo può essere convertito implicitamente in un altro (come per esempio da float a int), invece OCaMl, fortemente tipato, non permette neanche le conversioni che sono spesso scontate in altri linguaggi.
+La forte tipatura garantisce che il linguaggio sia "sicuro", con "sicuro" si intende che il codice non incapperà in errori per un'operazione invalida ma sintatticamente corretta.
+ML garantisce la sicurezza provando che ogni programma che supera il controllo dei tipi non può produrre errori se non di logica.
+Una conseguenza della rigorosità dei tipi è l'assenza del valore NULL, potrebbero causare errori della macchina come l'accesso ai famigerati dangling pointer.
+
+\subsubsection{Variabili e funzioni}
+
+\hspace*{0.5cm}Nonostante le si chiami variabili non lo sono nel senso che si intende nella maggiore parte dei linguaggi di programmazione, sono etichette. 
+Etichette nel senso che un metodo per applicare ad una funzione un "alias", non è un alias per sé.
+Questo implica che non si può passare una variabile per riferimento ma solo per valore essendo il valore un'espressione.
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}La sintassi di alto livello di una definizione è: 
+
+\hspace*{7.65cm}let $identifier$ = $expression$;;
+
+\hspace*{7.65cm}let $identifier$ = $expression1$ in $expression2$;;
+
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm} Il problema dello \textit{scoping} deriva da come funzione la evaluation di un'espressione in OCaMl.
+Si è abituati al concetto di variabili globali che, se usate in una funzione, possono mutarne il comportamento.
+Se in una funzione, nel linguaggio golang, si usa una variabile globale $x$ per definire la modalità di uso in una func $f()$, al mutare di $x$ muta il comportamento di $f()$.\newline
+\hspace*{0.5cm}In OCaMl, sempre in virtù della mancanza di stato, questo giochetto non funziona come aspettato.
+Si dia il caso $x=1$, dove $x=1 \to f()$ stampa "Primo" e $x=2 \to f()$ stampa "Secondo", una volta definita $f()$ la $x$ al suo interno si "slega" dall'etichetta $x$ e viene risolta ad un valore.
+Da quel momento in poi non importa quale valore prenda $x$ $f()$ si comporterà sempre come $x=1$ visto che in $f()$ non c'è un riferimento a $x$ ma è stato caricato al suo interno il valore di $x$ al momento della definizione di $f()$.\newline
+\hspace*{0.5cm}Per avere un comportamento simile a quello di golang si deve avere $x$ come parametro di $f$.
+
+\begin{minted}[fontsize=\small]{ocaml}
+# let y = 5;;
+val y : int = 5
+# let addy = fun x -> x+y;; <--- (*L'etichetta addy serve a richiamare una funzione
+                                   che data una x(intero) gli somma y*)
+val addy : int -> int = <fun> <- (*L'interprete di OCaMl ha valutato il tipo addy
+                                   che prende un intero e restituisce un intero*)
+# addy 8;; <-------------------- (*Uso l'applicazione addy con 8*)
+- : int = 13 <------------------ (*L'espressione viene valutata come intero e da
+                                   8 + 5*)
+# let y = 10;; <---------------- (*Aggiorno il valore di y, perdendo il valore 5*)
+val y : int = 10
+# addy 8;; <-------------------- (*Chiamo nuovamente addy con 8, mi aspetterei in
+                                   altri linguaggi di ottenere il risultato di 
+                                   8 + 10*)
+- : int = 13 <------------------ (*Una volta definita addy y è stato valutato e 
+                                   quindi addy è diventato una "costante" defini-
+                                   ta x + 5, da questo momento il valore y non è
+                                   legato al risultato di addy*)
+\end{minted}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}La natura delle funzioni in Ml, cittadini di prima classe, permette di passare una funzione, o più, come paramentri ad una funzione.
+Ciò che fa più di tutto sbattere la testa ai novizi è il type checking, nel caso del passaggio delle funzioni si può inferire qualcosa sui tipi di input e output delle varie funzioni passate.\newline
+\hspace*{0.5cm}Facciamo un esempio.
+
+
+\begin{minted}[fontsize=\small]{ocaml}
+# let comp f g x = f(g x);;
+val comp : ('a -> 'b) -> ('c -> 'a) -> 'c -> 'b = <fun>
+(*          |              |            |
+            |              |            |
+            - f deve prendere in input un tipo, non specificato associato al 
+              nome 'a e deve restituire il tipo 'b.
+                           |            |
+                           - g deve prendere un tipo 'c input ma si nota ora
+                             che deve dare in output un tipo compatible con l'
+                             input di f, quindi si può inferire che g restituisce 
+                             il tipo indefinito 'a.
+                                        |
+                                        - Il parametro x va dato in input a g
+                                          si può inferire allora che il tipo 
+                                          indefinito debba coincidere con il 
+                                          tipo 'c. L'output della funzione invece
+                                          coincide con il tipo di output di f*)
+
+\end{minted}
+
+\subsubsection{Pattern matching}
+
+\hspace*{0.5cm}Il pattern matching è una delle feature di Ml più potenti.
+
+Nel pattern matching un'espressione viene confrontata con vari pattern e si esegue il codice del primo pattern valido, Ml richiede che nello scrivere il pattern matching si sia esaustivi.
+Serve per evitare che possa esistere un input per il quale non c'è codice, quindi non si possa avere un valore di ritorno e di conseguenza non si possa avere un tipo. 
+In sostanza il pattern matching deve esaustivo perché in caso contrario non si soddisfa il vincolo di essere fortemente tipato.
+In più per lo stesso motivo di soddisfare il type checker ogni branch deve essere valutabile nello stesso tipo per evitare di avere una funzione che in un caso restituisci 'a e in un'altro 'b che porterebbe e a comportamenti inattesi.
+Ecco come si può scrivere un'istanza di pattern matching.
+
+\begin{minted}[fontsize=\small]{ocaml}
+
+match expression with
+|  pattern 1 -> expression 1
+|  pattern 2 -> expression 2
+|  ......... -> ............
+|  pattern n -> expression n
+\end{minted}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}La sintassi per definire fibonacci è qui riportata con due scritture equivalente dove \texttt{function} sostituisce il passaggio dell'ultimo paramentro e lo usa per applicarci il pattern matching, una versione contratta sostituisce il passaggio dell'ultimo paramentro e lo usa per applicarci il pattern matching, una versione contratta:
+
+\vspace*{0.5cm}
+
+\begin{minipage}{0.3\textwidth}
+\begin{minted}[fontsize=\footnotesize, escapeinside=??]{ocaml}
+let rec fibonacci x = 
+  match x with
+  | 1 -> 0
+  | 2 -> 1
+  | _ -> (fibonacci (x-1)) 
+         + (fibonacci (x-2));;
+\end{minted}
+\end{minipage}
+\hfill
+\begin{minipage}{0.3\textwidth}
+\begin{minted}[fontsize=\footnotesize, escapeinside=??]{ocaml}
+
+let rec fibonacci = function
+  | 1 -> 0
+  | 2 -> 1
+  | _ -> (fibonacci (x-1)) 
+         + (fibonacci (x-2));;
+\end{minted}
+\end{minipage}
+\begin{minipage}{0.3\textwidth}
+\[
+\text{Fibo} = {\scriptstyle
+\begin{cases}
+0 & n = 0, \\
+1 & n = 1, \\
+\text{Fibo}(n-1) + \text{Fibo}(n-2) & n > 1.
+\end{cases}
+}
+\]
+\end{minipage}
+
+\subsubsection{Ricorsione}
+
+\hspace*{0.5cm}Un altro "danno" collaterale della mancanza di stato è l'impossibilità di iterare. Per iterare, nella maggiore parte dei casi, serve una variabile contatore.
+Una cosa che non si può avere, come visto nell'esempio di fibonacci ci viene in soccorso la definizione ricorsiva di una funzione.
+La ricorsione può occorrere direttamente, quando una funzione chiama sé stessa o indiretta, quando una funzione $f$ ne chiama almeno un'altra $g$ che al suo interno chiami $f$.\newline
+\hspace*{0.5cm}Può venire in mente che la ricorsione renda ignombrante un qualsiasi programma Ml costringendo a creare \textit{stack frame} per ogni chiamata eppure per qualche magico motivo non solo a volte eguaglia la sua controparte iterativa ma a volte la supera (anche se non si arriva mai a superare il C).
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}La ricorsione di coda, uno specifico tipo di ricorsione dove prodotto da una chiamata ricorsiva è restituito direttamente dal chiamante senza ulteriore computazione.
+Vediamo un esempio e commentiamolo:
+\begin{minted}[fontsize=\small]{ocaml}
+let rec fact x = 
+  match x with 
+  | 1 -> 1 <-------------------------- (*Al caso base restituisco un valore fisso *)
+  | _ -> x * (fact (x-1));; <--------- (*x viene moltiplicata con un valore che va calcolato ancora*)
+\end{minted}
+
+
+\begin{minted}[fontsize=\small]{ocaml}
+let fact2 i =
+  let rec fact acc x =
+    match x with
+    | 0 -> acc <--------------------- (*Restituisce il risultato del fattoriale*)
+    | _ -> fact (x*acc) (x-1) <------ (*Esegue solo una chiamata a loop passando il valore già aggiornato,
+                                        in questo e un secondo trucco si nasconde la ricorsione di coda*)
+    in fact 1 i;;
+\end{minted}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Quindi non si deve fare nessuna operazione, una volta valutata un'operazione non serve la parte della restituzione dei valori perché viene, ad ogni livello.
+Ma ci sono anche altre accortezze che rendono efficente la ricorsione di coda. Al posto di allocare n stack frame, si deve pensare a come il frame è composto.
+Ha una sezione dove si inserisce il codice da eseguire e una per i paramentri, essendo una chiamata ricorsiva si può inferire che ogni stack frame avrà lo stesso valore come campo codice e lo stesso numero e tipi di parametri.
+Il meccanismo con cui si alleggerisce la ricorsione è creare un solo stack frame aggirnando i parametri con i valori della nuova chiamata visto che una volta arrivati in fondo si ottiene il valore finale si pu usare una quantità costante di stack frame. 
+
+\vspace*{0.5cm}
+
+\subsubsection{Aliasing \& Varianti}
+
+\vspace*{0.5cm}L'aliasing è la tecnica con il quale si crea un nuovo tipo senza troppe difficolta.
+Il nuovo tipo può anche essere il prodotto cartesiano di altri tipi \texttt{let int\_pair =int*int;;}.\newline
+\hspace*{0.5cm}L'uso dei varianti serve a creare un tipo per elenco esteso di tutti gli elementi, in questo elenco possono coesistere Costruttori che prendono un numero diverso di parametri o un tipo di diverso di parametri:
+\texttt{type int\_opt = Nothing | Integer of int}.
+
+\subsubsection{Moduli}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Il meccanismo dei moduli serve per dividere il codice(anche in un unico file) nelle sue tre parti: \textit{signature}, \textit{structures} e \texttt{funtori}.
+Dove la signature equivale all'interfaccia e le structures corrispondono alle implementezione.
+I funtori sono funzioni di strutture, ma se ne parlerà meglio più tardi.\newline
+\hspace*{0.5cm}Tra i vantaggi maggiori so trovano il namespace del modulo, che evita problemi di scoping e permette di usare astrazione e associarla ad un'implementazione.
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}La struttura con nome, che devere avere un lettera maiuscola come iniziale, sono così definite: \texttt{module ModuleName = struct implementation end;;}.
+Senza la struttura dei moduli ci sarebbe un problema di namespace in caso due metodi coincidessero nel nome visto che la seconda sovrascrirebbe la prima.
+Pere questo motivo i module sono divisi in namespace interni.\newline
+\hspace*{0.5cm}Per referenziare un dato modulo si usa il nome \textit{fully-qualified}: \texttt{ModuleName.identifier}.
+Dove ModuleName è il modulo in cui appare il componente e identifier è il componente.
+Per compilare \texttt{ocamlc -o unique unique.ml}.
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Un modulo di \textit{signatures} serve a nascondere i metodi implementati e restituisce un modulo interfaccia con cui interagire. \texttt{module type ModuleName = sig signature end}, è così che si definisce.
+
+\vspace*{0.5cm}
+
+\begin{minipage}{0.3\textwidth}
+\begin{minted}[fontsize=\footnotesize, escapeinside=??]{ocaml}
+   'Signature'
+
+module type SetSig = sig
+  type 'a set
+  val empty : unit -> 'a set
+  val add : 'a -> 'a set -> 'a set
+  val add : 'a -> 'a set -> bool
+end;;
+\end{minted}
+\end{minipage}
+\begin{minipage}{0.3\textwidth}
+\begin{minted}[fontsize=\footnotesize, escapeinside=??]{ocaml}
+  'Implementation'
+
+module Set : SetSig = struct
+  type 'a set = 'a list
+  let empty () = []
+  let add x l = x :: l
+  let mem x l = List.mem x l
+end;;
+\end{minted}
+\end{minipage}
+\begin{minipage}{0.3\textwidth}
+\begin{minted}[fontsize=\footnotesize, escapeinside=??]{ocaml}
+   'Usage'
+
+module TheSetSig = (SetSig.setSig: 
+      SetSigADT.SetSig);;
+
+open TheSetSig;;
+
+let s = TheSetSig.empty;;
+let s1 = TheSetSig.add 1 s;;
+\end{minted}
+\end{minipage}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Solitamente le strutture non sono altro che l'implementazione delle interfacce.
+In una structure possono esserci apparire:
+
+\vspace*{0.5cm}
+
+\begin{minipage}{0.45\textwidth}
+
+Structure
+
+\begin{itemize}
+  \item Definizione di tipi
+  \item Definizioni di eccezzioni
+  \item Definizioni di tipo: \texttt{let}
+  \item Aprire moduli (\texttt{open})
+  \item Includere statment da un altro modulo.
+  \item Definizioni di firme
+  \item Strutture innestate
+\end{itemize}
+
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+
+Signature
+
+\begin{itemize}
+  \item Un qualsiasi sottoinsieme dei metodi della structure
+  \item Definizione di tipi
+  \item Definizioni di eccezzioni
+  \item Defizioni di tipo \texttt{val}.
+  \item Includere statment da un altro modulo.
+  \item Strutture innestate
+\end{itemize}
+
+\end{minipage}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}I moduli non sono membri di prima classe, non sono espressioni e non possono, di conseguenza, essere passati come parametri o essere restituiti come risultati di una funzione.
+I motivi sono vari, ma il principale è che renderebbe indecidibile il tipo di tali espressioni.
+Un secondo motivo è la distinzione di fase, per il compilatore ci sono due fasi nella vita di un programma: \textit{compile-time} e \textit{run-time}, serve quindi a rendere compilabile le espressioni del modulo.
+
+\subsubsection{Funtori}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Si può, in OCaMl, avere moduli in cui si chiamano altri moduli, si introduce il concetto di modulo parametrico.
+Si consideri di voler creare un modulo \texttt{MakeSet} che sia un insieme di elementi omogenei di tipo 'a.
+Quando si prova a scoprire se un elemento fa parte dell'insieme, cioé si devono confrontrare due valori dell'insieme cosa si ottiene? 
+Un comportamento diverso da quello atteso se non si è definita la funzione che definisce l'eguaglianza tra due elementi.
+Può allora venire in aiuto un altro tipo di modulo $f'$ che ha dei vincoli definiti nel modulo \texttt{MakeSet}, in questo caso, $f'$ deve avere un tipo concreto \texttt{t} di elementi e un metodo \texttt{equal} che presi due tipi del valore concreto con la quale si sta usando l'istanza del modulo.\newline
+\hspace*{0.5cm}Il modulo che definisce i metodi necessari si dice \textbf{funtore}, potente strumento di programmazione che rende veramente generico il modulo.
+Ci sono tre fondamenti da tenere a mente.
+
+\begin{itemize}
+  \item I parametri di un funtore devono essere a loro volta \textit{moduli} o altri funtori \textit{funtori}\footnote{Spoiler, questo ti farà piangere. Sono serio.}, non può essere un valore concreto.
+  \item Sintatticamente, i nomi devono avere l'iniziale maiuscola e i parametri dei funtori vanno chiamati tra parentesi \texttt{(Equal: EqualSig)}.
+  \item I moduli e funtori, non sono di prima classe.
+\end{itemize}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Se però il funtore rende polimorfo un certo modulo una volta istanziato il modulo collassa ad assere monomorfo con l'implementazione passata al modulo.
+
+\subsubsection{Funzioni utili sulle liste}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Ci sono funzioni che elaborano i dati di una lista che sono così utili da essere presenti nel linguaggio nativo OCaMl.
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}\textbf{filter}: Una funzione che dato un predicato\footnote{Funzione che da in input} e una lista restituisce la lista composta da ogni elemento della lista in input che pongono a true il predicato.
+La firma è: ('a -> bool) -> 'a list -> 'a list.\newline
+\hspace*{0.5cm}\textbf{map}: Data una funzione 'f' e una lista di elementi restituisce la lista dove ogni elemento è il risultato della funzione applicata all'elemento della lista passata in input.
+La firma è: ('a -> 'b) -> 'a list -> 'b list.\newline
+\hspace*{0.5cm}\textbf{Reduce}: Data una funzione accumulatrice e una lista restituisce il risultato dell'accumulazione della funzione su  ogni elemento.
+La firma è: ('a -> 'b -> 'b) -> 'a list -> 'b.\newline
+\hspace*{0.5cm}Per fare questo Ocaml usa \texttt{fold\_right} e \texttt{fold\_left} che data una lista inizia ad accumulare o da destra e da sinistra.
+
+\subsubsection{Funtori di Funtori}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Il concetto più 'doloroso' da comprendere è il concetto di funtori di funtori. 
+Non tanto per la complessità del concetto ma l'astrusa maniera in cui si possono implementare.
+Infatti, come puntalizzato nella sezione \textbf{Funtori} si può passare come parametri ad un funtore un secondo funtore.
+Per istanziare in funtore si usa \texttt{module Name = Functor1(Module)}, ma astraendo questa scrittura si può dire che un funtore si istanzi così: \texttt{module Name = Functor2(\_\_\_)}.
+Ma quindi \texttt{\_\_\_} si può sostituire con qualsiasi modulo che combaci all'interfaccia richiaesta da \texttt{Functor1}, e se un certo \texttt{Functor2} aderisse allora, una volta istanziato potrebbe essere passato come modulo, ormai monomorfo, a \texttt{Functor1}.
+Arrivando a scrivere \texttt{Functor1(Functor2(\_\_\_))}, questa sequela di istanziazione andrà avanti fino ad arrivare ad un punto dove si necessita di un \texttt{Module} che implementi l'interfaccia richiesta dal funtore \texttt{FunctorN(Module)}.
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}\textbf{Esempio:}
+
+\vspace*{0.5cm}
+
+\begin{minipage}{0.35\textwidth}
+\begin{minted}[fontsize=\footnotesize, escapeinside=??]{ocaml}
+  module VarArgs (OP : OpVarADT.OpVarADT) =
+    struct
+    let arg x = fun y rest -> 
+                      rest (OP.op x y) ;;
+    let stop x = x;;
+    let f g = g OP.init;;
+  end
+  \end{minted}
+  \begin{minted}[fontsize=\footnotesize, escapeinside=??]{ocaml}
+  module type OpVarADT =
+    sig
+      type a and b and c
+      val op: a -> b -> c
+      val init : c
+    end
+  \end{minted}
+\end{minipage}
+\hfill
+\begin{minipage}{0.6\textwidth}
+\begin{minted}[fontsize=\footnotesize, escapeinside=??]{ocaml}
+module ListConcatFunctor (T : sig type t end) = 
+  struct
+    type a = T.t and b = a list and c = a list
+    let op = fun (x: a) y -> y @ [x] ;;
+    let init = [] ;;
+  end
+\end{minted}
+\begin{minted}[fontsize=\footnotesize, escapeinside=??]{ocaml}
+'main'
+module M0 = VarArgs.VarArgs(ListConcatFunctor.
+                            ListConcatFunctor(struct type t = int end));;
+module M1 = VarArgs.VarArgs(ListConcatFunctor.
+                            ListConcatFunctor(struct type t = string end));;
+module M2 = VarArgs.VarArgs(ListConcatFunctor.
+                            ListConcatFunctor(struct type t = (int * char) end));;
+\end{minted}
+
+\end{minipage}
+
+
+
+
+\end{document}
