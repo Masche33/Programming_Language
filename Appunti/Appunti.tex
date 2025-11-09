@@ -71,6 +71,8 @@ Un'espressione di $\lambda$-calcolo può essere in una delle seguenti forme.
 \hspace*{0.5cm}Le variabili possono essere libere o legate.
 Una variabile è legata se appare come input in una $\lambda$-expression.
 
+\newpage 
+
 \section{OCaMl}
 
 \hspace*{0.5cm} OCaMl è un dialetto di ML, che deriva dal $\lambda$-calcolo, con però altri nuove caratteristiche.
@@ -485,7 +487,7 @@ module M2 = VarArgs.VarArgs(ListConcatFunctor.
 
 \end{minipage}
 
-\vspace*{0.5cm}
+\newpage 
 
 \section{Erlang}
 
@@ -665,6 +667,40 @@ Gli attori usano processi e schedulatori differenti.
 
 \vspace*{0.5cm}
 
-\hspace*{0.5cm}
+\hspace*{0.5cm}Essendo un linguaggio concorrente non ci si concentra sulla prevenzione, ci si concentra nella \textit{remote detection} e \textit{handlig of errors}.
+In caso un processo dove occorre un'errore muoia lasciamo che sia un processo terzo che lo gestisce.
+
+\subsubsection{Semantica della gestione errori}
+
+\begin{itemize}
+  \item \textbf{Processi}: Ci sono due tipi di processi : Processi normali e Processi di sistema.
+    Un normale processo può diventare di sistema se tramite \texttt{trap\_exit, true}.
+  \item \textbf{Links}: I processi possono essere 'linkati', se due processi A, B sono collegati e A termina, per ogni motivo, arriverà un messaggio di a B, e viceveresa.
+  \item \textbf{Link set}: mostra tutti processi collegati ad un processo P.
+  \item \textbf{Monitors}: Link monodirezionali.
+  \item \textbf{Messaggi \& Segnali d'errore}: Tra attori si può scambiare \textit{messaggi} e \textit{segnali di errori}. I segnali di errori sono mandati automaticamente al crash di un attore.
+  \item \textbf{Ricevuta di un segnale d'errore}: Il messaggio viene ricevuto e parsato così: {'EXIT', Pid, Why}.
+  \item \textbf{Segnali di errore espliciti}: Un processo che fa eval exit(Why) termina e fa broadcast un segnale d'uscita con la ragione Why.
+  \item \textbf{Segnali non intrappolabili}: Al ricevimento di un segnale di kill termina e genera il segnale exit(Pid, kill).
+\end{itemize}
+
+\vspace*{0.5cm}
+
+\subsubsection{Creare Link}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}In un insieme di processi può essere messo in relazione tramite la primitiva \texttt{link(Pid)}, che connette il processo chiamate al processo con Pid.\newline
+\hspace*{0.5cm}Una volta che $n$ processi sono collegati se ne muore uno tutti muoiono a cascata propagando un eventuale errore a tutti i processi collegati.\newline
+\hspace*{0.5cm}Ci sono occasioni in cui si vuole evitare che in una catena l'errore si propaghi oltre un certo processo. 
+Per evitare che un processo termini all'arrivo di un messaggio di errore lo si rende di sistema \texttt{process\_flag(trap\_exit, true)}.\newline
+\hspace*{0.5cm}Si può volere anche un collegamento monodirezionale, per averli si usano i monitor dove A monitora lo stato di B ma B non viene effettuato da A.
+
+
+
+
+
+
+
 
 \end{document}
