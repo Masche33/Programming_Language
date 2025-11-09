@@ -486,7 +486,136 @@ module M2 = VarArgs.VarArgs(ListConcatFunctor.
 
 \end{minipage}
 
+\vspace*{0.5cm}
 
+\subsection{Erlang}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Erlang è stato progettatto dal basso verso l'altro per essere: Concorrente, distribuito, Tollerante al fallimento, scalabile, leggero e un sistema in tempo-reale.
+Appartiene alla famiglia dei linguaggi \textit{funzionali}.
+Un concetto fondamentale per il linguaggio è che i processi \textit{non condividono} spazi di memoria.
+Un secondo concetto fondamentale è il concetto di attore.
+È dinamicamente tipato, cioé, non si può essere certi del tipo delle espressioni a \textit{compile time}.
+
+\vspace*{0.5cm}
+
+\subsubsection{Erlang 'sequenziale'}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}In Erlang le variabili, \textit{variabili ad assegnamento singolo}, come si può immaginare le si possono dare valore una sola volta.
+In caso si provi a mutare il vaore di una variable si incorrerà in un errore.
+Una variabile a cui è stato assegnato un valore si dice \textbf{bound}, altrimenti \textbf{unbound}.
+Si chiamano variabili, nonostante non possano variare, per due ragioni:
+\begin{itemize}
+  \item Sono variabili, il valore però cambiare un numero preciso di volte, una. Quando cambiano da essere \textbf{unbound} ad essere \textbf{bound}.
+  \item Assomigliano alle variabili degli altri linguaggi più convenzionali\footnote{Questa proprio non l'ho capita.}
+\end{itemize}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Il motivo di questo peculiare comportamento si trova in \texttt{'='}, che un operatore di pattern matching che lega una variabile unbound ad un valore.
+In fine lo scope di una variabile è l'unità in cui è stata definita, se 'X' viene usata in una funzione il suo valore non puà fare escape.
+Non esiste il concetto di variabile globale o variabili private.
+In Erlang una variabile acquisce valore come risultato di un \texttt{pattern matching} funzionante.
+Il significato di \texttt{=} è: \texttt{Lhs=Rhs}, cioé, valuta il valore \texttt{Rhs} e dopo fanne il match con il valore di sinistra.
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Il motivo per questa scelta è di natura pratica.
+In Erlang una variabile punta ad un valore, in una prozione di memoria,  che contiene un valore, che non può essere cambiato, questo semplifica il debugging.
+Una volta scoperta la variabile con il valore scorretto la possibile causa è una e una soltanto, il suo assegnamento.
+
+\vspace*{0.5cm}
+
+\subsubsection{Atomi, Tuple, Liste}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Gli atomi sono il valore stesso dell'atomo, devono iniziare con una lettera minuscola o '.
+
+\begin{tcolorbox}
+  \texttt{1> hello.}\newline
+  \texttt{hello}
+  \texttt{2> 'Martedì'.}\newline
+  \texttt{'Martedì'}
+\end{tcolorbox}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Una tupla, in insieme eterogeneo di numero fisso in un'unica entità.
+In Erlang una tupla non da un nome ai campi.
+Per rendere più semplice l'utilizzo è comune l'abitudine di mettere in testa un atomo che descriva la Tupla.
+
+\begin{tcolorbox}
+  \texttt{1> Person = \{person, \{name, joe\}, \{height, 1.82\}\}.}
+\end{tcolorbox}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}L'estrazione di un valore di una tupla è basata sul pattern matching.
+A sinistra si mette un espressione dove solo i campi a cui si è interessati si mette delle unbound variable.\
+
+\begin{tcolorbox}
+  \texttt{1> Person = \{person, \{name, joe\}, \{height, 1.82\}\}.}\newline
+  \texttt{\{person,\{name,joe\},\{height,1.82\}\}}\newline
+  \texttt{2> \{\_,\{\_,N\},\{\_,H\}\} = Person.}\newline
+  \texttt{3> N.}\newline
+  \texttt{joe}
+\end{tcolorbox}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Le liste sono un insieme di elementi e numero arbitrario.
+Il primo elemento in una lista si chiama \textit{testa}, il resto della lista si chiama \textit{coda}, estrarre la testa è molto efficente.\newline
+\hspace*{0.5cm}Se \texttt{T} è una lista allora anche \texttt{[H|T]}, se \texttt{T} non fosse una lista il risultato sarebbe una lista impropria.
+Anche in questo caso l'estrazione di un valore avviene tramite pattern matching.
+
+\begin{tcolorbox}
+  \texttt{1> ListaSpesa = [{mele, 3}, {riso, 1000}, {zafferano, 10}].}\newline
+  \texttt{[{mele,3},{riso,1000},{zafferano,10}]}\newline
+  \texttt{2> [Compra1|ListaSpesa2] = ListaSpesa.}\newline
+  \texttt{[{mele,3},{riso,1000},{zafferano,10}]}\newline
+  \texttt{3> Compra1.}\newline
+  \texttt{{mele,3}}
+\end{tcolorbox}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Esistono delle espressioni per creare delle liste tramite generatori in forma di \texttt{Pattern <-ListExpression} dove \texttt{ListExpr} valuta in una lista.
+
+\vspace*{0.5cm}
+
+\subsubsection{Moduli \& Funzioni}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Il moduli sono le unità di base con cui i programmi vengono creati, i moduli contengono funzioni e le funzioni possono essere eseguite parallelamente o sequenzialmente.\newline
+\hspace*{0.5cm}Una funzione è formata da una serie di guardie, basate su pattern matching, dove per ogni pattern match è associato il codice da eseguire.\newline
+\hspace*{0.5cm}Un modulo è formato da:
+
+\begin{minted}[fontsize=\small]{erlang}
+  -module(name)
+  -export([func1/1,...,funcN/2]).
+  func1(pattern1)-> codice1;
+  func1(pattern2)-> codice2.
+  funcN(patternM)-> codiceZ.
+\end{minted}
+
+\vspace*{0.5cm}
+
+\subsubsection{Modello ad Attori}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Gli attori sono una primitiva concorrente che non condividono nessuna risorsa con un altro attore.
+Il metodo per condividere informazioni è tramite il passaggio di messaggi che finiscono nella mailbox dell'attore.\newline
+\hspace*{0.5cm}Al ricevimento di un messaggio un attore può: 
+1) Mandare un numero di messaggi ad altri attori.
+2) Creare un numero di attori.
+3) Può assumere un comportamento differente per gestire il prossimo messaggio nella sua casella postale.\newline
+\hspace*{0.5cm}Tutte le comunicazioni sono asincrone e gli attori non condividono nessuna parte dello stato.
 
 
 \end{document}
