@@ -24,9 +24,8 @@
 \maketitle
 \tableofcontents
 \newpage
-\section{Programmazione funzionale}
 
-\subsection{Introduzione}
+\section{Introduzione}
 
 \hspace*{0.5cm} La \textit{programmazione funzionale} è un paradigma di programmazione in cui le funzioni sono membri di prima classe \footnote{Con ciò si intende che le funzioni possono essere passate come argomenti ad altre funzioni e possono essere memorizzate come valori}.
 La struttura di controllo prevalente diventa la ricorsione al posto dei cicli di controllo di flussi.
@@ -47,7 +46,7 @@ Dove l'\textit{astrazione} è la definizione della funzione e l'\textit{applicaz
 
 \hspace*{0.5cm}Avendo questa forma il codice non viene tenuto conto di uno stato mutevole, al posto di parametri che tengano conto dello stato le variabili non sono altro che etichette usate per richiamare le funzioni precedentemente specificate.
 
-\subsection{Lambda calcolo} 
+\section{Lambda calcolo} 
 
 \hspace*{0.5cm} Il $\lambda$-calcolo è un modello formale per descivere procedimenti formali di una funzione matematica\footnote{Treccani, 10/2025}
 
@@ -72,7 +71,7 @@ Un'espressione di $\lambda$-calcolo può essere in una delle seguenti forme.
 \hspace*{0.5cm}Le variabili possono essere libere o legate.
 Una variabile è legata se appare come input in una $\lambda$-expression.
 
-\subsection{OCaMl}
+\section{OCaMl}
 
 \hspace*{0.5cm} OCaMl è un dialetto di ML, che deriva dal $\lambda$-calcolo, con però altri nuove caratteristiche.
 Quindi in questi appunti se una caratteristica è comune a tutti i dialetti di ML si userà ML e OCaMl quando è una caratteristica aggiunta o specifica di OCaml.
@@ -107,7 +106,7 @@ La forte tipatura garantisce che il linguaggio sia "sicuro", con "sicuro" si int
 ML garantisce la sicurezza provando che ogni programma che supera il controllo dei tipi non può produrre errori se non di logica.
 Una conseguenza della rigorosità dei tipi è l'assenza del valore NULL, potrebbero causare errori della macchina come l'accesso ai famigerati dangling pointer.
 
-\subsubsection{Variabili e funzioni}
+\subsection{Variabili e funzioni}
 
 \hspace*{0.5cm}Nonostante le si chiami variabili non lo sono nel senso che si intende nella maggiore parte dei linguaggi di programmazione, sono etichette. 
 Etichette nel senso che un metodo per applicare ad una funzione un "alias", non è un alias per sé.
@@ -181,7 +180,7 @@ val comp : ('a -> 'b) -> ('c -> 'a) -> 'c -> 'b = <fun>
 
 \end{minted}
 
-\subsubsection{Pattern matching}
+\subsection{Pattern matching}
 
 \hspace*{0.5cm}Il pattern matching è una delle feature di Ml più potenti.
 
@@ -239,7 +238,7 @@ let rec fibonacci = function
 \]
 \end{minipage}
 
-\subsubsection{Ricorsione}
+\subsection{Ricorsione}
 
 \hspace*{0.5cm}Un altro "danno" collaterale della mancanza di stato è l'impossibilità di iterare. Per iterare, nella maggiore parte dei casi, serve una variabile contatore.
 Una cosa che non si può avere, come visto nell'esempio di fibonacci ci viene in soccorso la definizione ricorsiva di una funzione.
@@ -277,14 +276,14 @@ Il meccanismo con cui si alleggerisce la ricorsione è creare un solo stack fram
 
 \vspace*{0.5cm}
 
-\subsubsection{Aliasing \& Varianti}
+\subsection{Aliasing \& Varianti}
 
 \vspace*{0.5cm}L'aliasing è la tecnica con il quale si crea un nuovo tipo senza troppe difficolta.
 Il nuovo tipo può anche essere il prodotto cartesiano di altri tipi \texttt{let int\_pair =int*int;;}.\newline
 \hspace*{0.5cm}L'uso dei varianti serve a creare un tipo per elenco esteso di tutti gli elementi, in questo elenco possono coesistere Costruttori che prendono un numero diverso di parametri o un tipo di diverso di parametri:
 \texttt{type int\_opt = Nothing | Integer of int}.
 
-\subsubsection{Moduli}
+\subsection{Moduli}
 
 \vspace*{0.5cm}
 
@@ -390,7 +389,7 @@ Signature
 I motivi sono vari, ma il principale è che renderebbe indecidibile il tipo di tali espressioni.
 Un secondo motivo è la distinzione di fase, per il compilatore ci sono due fasi nella vita di un programma: \textit{compile-time} e \textit{run-time}, serve quindi a rendere compilabile le espressioni del modulo.
 
-\subsubsection{Funtori}
+\subsection{Funtori}
 
 \vspace*{0.5cm}
 
@@ -412,7 +411,7 @@ Ci sono tre fondamenti da tenere a mente.
 
 \hspace*{0.5cm}Se però il funtore rende polimorfo un certo modulo una volta istanziato il modulo collassa ad assere monomorfo con l'implementazione passata al modulo.
 
-\subsubsection{Funzioni utili sulle liste}
+\subsection{Funzioni utili sulle liste}
 
 \vspace*{0.5cm}
 
@@ -428,7 +427,7 @@ La firma è: \texttt{\>('a -> 'b) -> 'a list -> 'b list}.\newline
 La firma è: \texttt{\>('a -> 'b -> 'b) -> 'a list -> 'b}.\newline
 \hspace*{0.5cm}Per fare questo Ocaml usa \texttt{fold\_right} e \texttt{fold\_left} che data una lista inizia ad accumulare o da destra e da sinistra.
 
-\subsubsection{Funtori di Funtori}
+\subsection{Funtori di Funtori}
 
 \vspace*{0.5cm}
 
@@ -488,7 +487,7 @@ module M2 = VarArgs.VarArgs(ListConcatFunctor.
 
 \vspace*{0.5cm}
 
-\subsection{Erlang}
+\section{Erlang}
 
 \vspace*{0.5cm}
 
@@ -500,7 +499,7 @@ Un secondo concetto fondamentale è il concetto di attore.
 
 \vspace*{0.5cm}
 
-\subsubsection{Erlang 'sequenziale'}
+\subsection{Erlang 'sequenziale'}
 
 \vspace*{0.5cm}
 
@@ -529,7 +528,7 @@ Una volta scoperta la variabile con il valore scorretto la possibile causa è un
 
 \vspace*{0.5cm}
 
-\subsubsection{Atomi, Tuple, Liste}
+\subsection{Atomi, Tuple, Liste}
 
 \vspace*{0.5cm}
 
@@ -587,7 +586,7 @@ Anche in questo caso l'estrazione di un valore avviene tramite pattern matching.
 
 \vspace*{0.5cm}
 
-\subsubsection{Moduli \& Funzioni}
+\subsection{Moduli \& Funzioni}
 
 \vspace*{0.5cm}
 
@@ -605,7 +604,7 @@ Anche in questo caso l'estrazione di un valore avviene tramite pattern matching.
 
 \vspace*{0.5cm}
 
-\subsubsection{Modello ad Attori}
+\subsection{Modello ad Attori}
 
 \vspace*{0.5cm}
 
@@ -615,7 +614,57 @@ Il metodo per condividere informazioni è tramite il passaggio di messaggi che f
 1) Mandare un numero di messaggi ad altri attori.
 2) Creare un numero di attori.
 3) Può assumere un comportamento differente per gestire il prossimo messaggio nella sua casella postale.\newline
-\hspace*{0.5cm}Tutte le comunicazioni sono asincrone e gli attori non condividono nessuna parte dello stato.
+\hspace*{0.5cm}Tutte le comunicazioni sono asincrone e gli attori non condividono nessuna parte dello stato.\newline
+\hspace*{0.5cm}La concorrenza in Erlang si basa su tre funzioni fondamentali. \texttt{spawn}, che serve a creare un nuovo attore. L'operatore \texttt{!} per mandare un messaggio da un attore ad un altro. Infine un meccanismo per il pattern-matching dei messaggi nella casella postale dell'attore.\newline
+\hspace*{0.5cm}Ogni attore è caratterizzato da: un indirizzo che lo identifica e una casella che tiene i messaggi arrivati ma non ancora elaborati.\newline
+\hspace*{0.5cm}I messaggi sono ordinati in ordine d'arrivo e non di invio.\newline
+\hspace*{0.5cm}Per \textit{mandare} un messaggio ad un altro attore: 
+1) Il Pid del ricevente deve essere conosciuto. 
+2) Deve essere usata la primitiva dell'invio (!).
+3) Il messaggio deve includere il Pid del mittente se è necessaria una risposta.\newline
 
+\hspace*{0.5cm}\texttt{Exp1 | Exp2}. 
+\texttt{Exp1} deve essere l'identificatore di un attore. 
+\texttt{Exp2} deve essere un'espressione valida.\newline
+\hspace*{0.5cm}Il risultato dell'espressione dell'invio è il risultato di \texttt{Exp2}, inviare un messaggio non interrompe il mittente, l'invio non fallisce mai.
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Il ricevimento è così gestito.
+
+\begin{tcolorbox}
+  \begin{minted}{erlang}
+    receive
+      Pattern1 [when GuardSeq1 ] -> Body1 ;
+      ...
+      Patternn [when GuardSeqn ] -> Bodyn
+    [after Exprt -> Bodyt ]
+    end
+  \end{minted}
+\end{tcolorbox}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Gli attori non sono processi e non sono gestiti dal OS.
+Gli attori usano processi e schedulatori differenti.
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Infine c'è un modo per rendere pubblico il proprio identificativo.
+
+\begin{tcolorbox}
+  \begin{minted}{erlang}
+    register(atom, Pid)
+    unregister(atom)
+    whereis(atom) -> Pid|undefined
+    registered()
+  \end{minted}
+\end{tcolorbox}
+
+\subsection{Gestire gli errori}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}
 
 \end{document}
