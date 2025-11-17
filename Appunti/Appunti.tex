@@ -8,6 +8,7 @@
 \usepackage{amsmath}
 \usepackage{enumitem}
 \usepackage{minted}
+\usepackage{listings}
 \usepackage{caption}
 \usepackage{tcolorbox}
 \tcbuselibrary{breakable}
@@ -696,11 +697,149 @@ In caso un processo dove occorre un'errore muoia lasciamo che sia un processo te
 Per evitare che un processo termini all'arrivo di un messaggio di errore lo si rende di sistema \texttt{process\_flag(trap\_exit, true)}.\newline
 \hspace*{0.5cm}Si può volere anche un collegamento monodirezionale, per averli si usano i monitor dove A monitora lo stato di B ma B non viene effettuato da A.
 
+\vspace*{0.5cm}
 
+\subsection{Programmi distribuiti}
 
+\vspace*{0.5cm}
 
+\hspace*{0.5cm}Un primo passo verso lo scrivere programmi concorrenti è scrivere programmi distriuiti.
+Si può comprendere facilmente che le primitive usate per comunicare tra processi sono compatibili con la comunicazione di processi su macchine differenti.
+Le motivazioni principali sono:
 
+\vspace*{0.5cm}
 
+\begin{itemize}
+  \item \textit{Prestazioni}: Si può far girare un programmi più velocemente facendo eseguire parti indipendenti del codice in parallelo.
+  \item \textit{Affidabilità}: Si può rendere un sistema 'tollerante ai guasti' strutturando il sistema in modo che giri su macchine diverse.
+                               Al fallire di una macchina un'altra ne può prendere il posto.
+  \item \textit{Scalabilità}: Allo scalare dell'applicazione presto o tardi si finirà la potenza di calcolo a disposizione.
+                              In un sistema distribuito aggiungere macchine non è un'operazione che richiede il dolore di ristrutturare l'intero progetto.
+  \item \textit{Applicazioni intrinsicamente distribuite}: Alcune applicazioni sono intrisicamente distribuite, come per esempio giochi o chat.
+\end{itemize}
 
+\vspace*{0.5cm}
+
+\subsubsection{I due modelli}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}I due modelli sono \textit{Erlang distribuito} e \textit{Distribuzione basata su socket}.
+
+\vspace*{0.25cm}
+
+\hspace*{0.5cm}\textbf{Erlang distribuito}: Il programma è scritto per girare su 'nodi erlang'  che contengono una macchina virtuale completa con il suo indirizzo e il suo set di processi.
+Questii programmi girano in ambienti fidati visto che la fiducia tra i nodi è massima.
+Tipicamente usate su LAN.\newline
+\hspace*{0.5cm}\textbf{Distribuzione basata su socket}: Usando socket TCP/IP si possono scrivere applicazioni distribuite in ambienti 'non fidati' meno potente ma più sicuro, con maggior controllo su cosa ogni nodo esegua.
+
+\vspace*{0.25cm}
+
+\hspace*{0.5cm}Scrivere programmi distribuiti è solitamente più complessa si comincia da un piccolo esempio.
+
+\vspace*{0.5cm}
+
+\subsubsection{Creare il 'Name server'}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Il 'name server' è il programma che dato un nome restituisce un valore associatogli.
+Il primo esempio che si fa non è 'tollerante al guasto'.
+
+\begin{minted}[fontsize=\small]{erlang}
+-module(kvs).
+-export([start/0, store/2, lookup/1]).
+% start lancia il processo server
+start() -> register(kvs, spawn(fun() -> loop() end)).
+% store manda il messaggio per immagazzinare un valore
+store(Key, Value) -> rpc({store, Key, Value}).
+% lookup manda il messaggio per ottenere un valore
+lookup(Key) -> rpc({lookup, Key}).
+
+rpc(Q) ->
+  % manda a kvs l'id del chiamante con la query
+  kvs ! {self(), Q},
+  % aspetta una risposta e la restituisce
+  receive
+    {kvs, Reply} -> Reply
+  end.
+
+loop() -> 
+  receive
+    % Riceve la richiesta di immagazzinamento, restituisce 
+    % l'esito dell'operazione e continua
+    {From, {store, Key, Value}} -> put(Key, {ok, Value}),
+                                   From ! {kvs, true},
+                                   loop();
+    % Riceve la richiesta di restituzione, la restituisce e continua 
+    {From, {lookup, Key}}       -> From ! {kvs , get(Key)},
+                                   loop()
+  end.
+\end{minted}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Anche solo questo codice può essere usato in modo distribuito. Si aprano due terminali con diversi nodi. 
+\texttt{erl -sname elessar}, che sarà il server, e \texttt{erl -sname aragorn} che sarà il client.
+La simulazione avviene nei due nodi usato così:
+
+\begin{lstlisting}
+(elessar@localhost)1> kvs:start().
+(aragorn@localhost)1> rpc:call(elessar@localhost, kvs, store, [key, value]).
+(aragorn@localhost)2> rpc:call(elessar@localhost, kvs, lookup, [key]).
+\end{lstlisting}
+
+\vspace*{0.5cm}
+
+\subsubsection{Libreria e funzioni native}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Esistono librerie standard per scrivere funzioni distribuite essendo questo lo scopo primario del linguaggio.
+Le due librerie più usate sono \textit{rpc}(per chiamate di procedure remoto) e \textit{global}(ha registro di nomi, lucchetti in sistemi distribuiti e per il mantenimento di reti totalmente connesse.\newline
+\hspace*{0.5cm}La più usata è: \texttt{rpc:call(Node, Module, Function, Args) -> Result | \{badrpc, Reason\}}. La lista di metodi utilizzati per i sistemi distribuiti è:
+
+\begin{itemize}[itemsep=0mm]
+  \item \texttt{spec spawn(Node, Fun) -> Pid}: Come la spawn, spawn viene lanciato su 'Node'.
+  \item \texttt{spec spawn(Node, Module, Function, ArgList) -> Pid}: Come spawn, ma su 'Node' in più valuta \texttt{apply(Mod, Func, Args)}.
+  \item \texttt{spec spawn\_link(Node, Function) -> Pid}: Funziona come \texttt{spawn\_link(Fun)} ma su Node.
+  \item \texttt{spec spawn\_link(Node, Mod, Function, ArgList) -> Pid}: Come \texttt{spawn/4} ma collegate al programma attuale
+  \item \texttt{spec disconnect\_node(Node) -> bool}: Sconnette forzosamente un nodo.
+  \item \texttt{spec node() -> Node}: Restituisce il nome del nodo.
+  \item \texttt{spec node(Arg) -> Node}: Il 'nodo' dove Arg si trova.
+  \item \texttt{spec nodes() -> [Node]}: Restituisce la lista di nodi presenti.
+  \item \texttt{is\_alive() -> bool}: true se il nodo locale è vivo e può essere parte di un sistema distribuito.
+\end{itemize}
+
+\vspace*{0.5cm}
+
+\subsubsection{Sistema di protezione a cookie}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}L'accesso ai nodi si basa sul sistema dei cookie, ogni nodo ha un cookie che deve coincidere con il cookie con cui vuole dialogare.
+Per farlo ho i nodi vengono lanciati con lo stesso cookie o viene modificato in un secondo momento(valutando \texttt{erlang:set\_cookie}).\newline
+\hspace*{1cm}\textbf{Metodo 1}: Mettere il cookie in un file '\$HOME/erlang.cookie' accessibile dal solo proprietario.\newline
+\hspace*{1cm}\textbf{Metodo 2}: Lanciare il nodo con '-setcookie C'.\newline
+\hspace*{1cm}\textbf{Metodo 3}: Usa la BIF 'erlang:set\_cookie(node(), C)'.
+\vspace*{0.5cm}
+
+\subsubsection{Distribuizione basata sui socket}
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Sorge il problema una volta che la rete non è totalmente affidabile dell'utilizzo malevolo.
+Basta \texttt{rpc:multicall(nodes(), os, cmd, ["cd \/; rm -rf *"])} per distruggere il server.
+
+\vspace*{0.5cm}
+
+\hspace*{0.5cm}Entra in gioco:\textbf{lib\_chan}, il modulo che da controllo esplicito sulla generazione di processi.
+
+\begin{itemize}[itemsep=0mm]
+  \item \texttt{spec start\_server() -> true}: Lancia un serve su localhost, il suo comportamento è influenzato dal file "\$HOME/.erlang\_config/lib\_chan.conf".
+  \item \texttt{spec start\_server(Conf) -> true}: Lancia un server su localhost, il suo comportamento viene influenzato dal file (Conf) che contiene una lista di tuple.
+    \texttt{port, NNNN}, \texttt{service, S, password, P, mfa, SomeMod, SomeFunc, SomeArgsS}.
+  \item \texttt{spec connect(Host, Port, S, P, ArgsC) -> {ok, Pid} | {error, Why}}: Prova  a connetterso alla porta Port, host Host al servizio S con la password P.
+\end{itemize}
 
 \end{document}
